@@ -1,0 +1,54 @@
+.loginWrapper {
+    background-color: #fff;
+    padding: 120px 20px 80px;
+    display: flex;
+    justify-content: center;
+}
+
+.loginCard {
+    background-color: #3f3f3f;
+    max-width: 420px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 8px;
+}
+
+.loginCard h2{
+    text-align: center;
+    color: #fff
+}
+
+.formGroup {
+    margin-bottom: 18px;
+}
+
+.formGroup input {
+    width: 100%;
+    padding: 14px 12px;
+}
+
+.loginBtn {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    background-color: #ff9900;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.snsBtn {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.loginFooter {
+    margin-top: 20px;
+    text-align: center;
+}
