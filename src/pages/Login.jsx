@@ -27,13 +27,39 @@ export default function Login(){
             setAccessToken(data.accessToken);
         })
         .catch(err => console.log(err));
+    }
 
+    /*
+        여기서 개발자는 Authorization 헤더만 신경 썼지, 어디에도 refreshToken을 넣는 코드를 작성하지 않았습니다. 하지만 브라우저는 다음과 같이 행동합니다.
+        URL 확인: 요청 주소가 http://localhost:9991/api/auth/logout이네?
+        쿠키 확인: "내 금고에 /api/auth 경로로 저장된 쿠키가 있나?" -> 있음! (refreshToken)
+        자동 동봉: 브라우저가 네트워크 요청을 보내기 직전에, 헤더에 **Cookie: refreshToken=xxxx;**를 몰래 자동으로 끼워 넣습니다. 
+    */
+    const logout = () => {
+        fetch("http://localhost:9991/api/auth/logout", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Authorization": "Bearer " + accessToken,
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => {
+            if(!res.ok) throw new Error("로그아웃 실패");
+            return res.json();
+        })
+        .then(data => {
+            console.log("요청 결과 ", data);
+            setAccessToken(data.accessToken);
+        })
+        .catch(err => console.log(err));
     }
 
     // header에 액세스토큰 넣기
     const me = () => {
         fetch("http://localhost:9991/api/auth/me", {
             method: "GET",
+            credentials: "include", // 쿠키를 사용한 데이터 전송 yes
             headers: {
                 "Authorization": "Bearer " + accessToken,
                 "Content-Type": "application/json"
@@ -45,7 +71,6 @@ export default function Login(){
         })
         .then(data => {
             console.log("정보 조회 결과 ", data);
-            setAccessToken(data.accessToken);
         })
         .catch(err => console.log(err));
     }
@@ -76,6 +101,7 @@ export default function Login(){
                     </div>
 
                     <button type="button" className={styles.loginBtn} onClick={login}>Login</button>
+                    <button type="button" className={styles.loginBtn} onClick={logout}>Logout</button>
                     <button type="button" className={styles.loginBtn} onClick={me}>나의정보 조회</button>
                     <button type="button" className={styles.snsBtn}>Google</button>
                     <button type="button" className={styles.snsBtn}>Naver</button>
