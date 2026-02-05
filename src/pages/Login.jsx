@@ -3,13 +3,15 @@ import styles from "../components/ui/login_form.module.css"
 import { useRef, useState } from "react";
 
 export default function Login(){
+    const API_BASE = "http://localhost:9993"
     const homepageIdRef = useRef(null);
     const passwordRef = useRef(null);
     const [accessToken , setAccessToken] = useState("");
 
     const login = () => {
-        fetch("http://localhost:9991/api/auth/login", {
+        fetch(API_BASE + "/api/auth/login", {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -36,7 +38,7 @@ export default function Login(){
         자동 동봉: 브라우저가 네트워크 요청을 보내기 직전에, 헤더에 **Cookie: refreshToken=xxxx;**를 몰래 자동으로 끼워 넣습니다. 
     */
     const logout = () => {
-        fetch("http://localhost:9991/api/auth/logout", {
+        fetch(API_BASE + "/api/auth/logout", {
             method: "POST",
             credentials: "include",
             headers: {
@@ -57,7 +59,7 @@ export default function Login(){
 
     // header에 액세스토큰 넣기
     const me = () => {
-        fetch("http://localhost:9991/api/auth/me", {
+        fetch(API_BASE + "/api/auth/me", {
             method: "GET",
             credentials: "include", // 쿠키를 사용한 데이터 전송 yes
             headers: {
@@ -73,6 +75,13 @@ export default function Login(){
             console.log("정보 조회 결과 ", data);
         })
         .catch(err => console.log(err));
+    }
+
+    const snsLogin = (provider) => {
+        // 동기 vs 비동기?
+        // 동기 방식으로 요청해야 한다.. 주의) 우리 서버로 요청을하는 이유는 단지 provider의 로그인 인증 요청 주소가 우리 서버측에
+        // 있기 때문이었음... 만일 이 방법이 싫다면? 직접 여기서 적어도 됨!!
+        location.href = `${API_BASE}/oauth2/authorization/${provider}`;
     }
 
     return (
@@ -103,9 +112,9 @@ export default function Login(){
                     <button type="button" className={styles.loginBtn} onClick={login}>Login</button>
                     <button type="button" className={styles.loginBtn} onClick={logout}>Logout</button>
                     <button type="button" className={styles.loginBtn} onClick={me}>나의정보 조회</button>
-                    <button type="button" className={styles.snsBtn}>Google</button>
-                    <button type="button" className={styles.snsBtn}>Naver</button>
-                    <button type="button" className={styles.snsBtn}>Kakao</button>
+                    <button type="button" className={styles.snsBtn} onClick={() => snsLogin("google")}>Google</button>
+                    <button type="button" className={styles.snsBtn} onClick={() => snsLogin("naver")}>Naver</button>
+                    <button type="button" className={styles.snsBtn} onClick={() => snsLogin("kakao")}>Kakao</button>
                 </form>
 
                 <div className={styles.loginFooter}>
