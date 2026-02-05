@@ -15,6 +15,7 @@ import Single from "./pages/Single.jsx";
 import Live from "./pages/Live.jsx";
 import Cart from "./pages/Cart.jsx";
 import Checkout from "./pages/Checkout.jsx";
+import OAuthCallback from "./pages/OAuthCallback.jsx";
 
 // 코드 스플리팅(지연 로딩)
 const Home = lazy(() => import("./pages/Home.jsx"));
@@ -22,27 +23,32 @@ const Home = lazy(() => import("./pages/Home.jsx"));
 const CoursesCourses = lazy(() => import("./pages/courses/Courses.jsx"));
 */
 
-function RootLayout(){
+function RootLayout() {
   const [loading, setLoading] = useState(true);
 
-  useEffect( ()=>{
-    const t = setTimeout(()=> setLoading(false), 300);
-    return ()=>clearTimeout(t)
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(t);
   }, []);
 
-  return(
+  return (
     <>
       {loading && <Spinner />}
-      <Topbar/>
-      <Navbar/>
+      <Topbar />
+      <Navbar />
       <Routes>
         <Route path="/" element={<App />}>
-          <Route index element={
-            <Suspense fallback={<div className="p-4">Loading...</div>}>
-              <Home />
-            </Suspense>
-          }/>
+          <Route
+            index
+            element={
+              <Suspense fallback={<div className="p-4">Loading...</div>}>
+                <Home />
+              </Suspense>
+            }
+          />
           <Route path="/login" element={<Login />} />
+          {/* 로그인 직후 서버로부터 리다이렉트 명령을 받은 브라우저가 보게 될 화면으로 링크 */}
+          <Route path="/oauth/callback" element={<OAuthCallback />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/single" element={<Single />} />
           <Route path="/live" element={<Live />} />
@@ -59,7 +65,7 @@ function RootLayout(){
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <StrictMode>
-      <RootLayout />        
+      <RootLayout />
     </StrictMode>
-  </BrowserRouter>
+  </BrowserRouter>,
 );

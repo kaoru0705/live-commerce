@@ -1,6 +1,6 @@
 ### 임시회원 등록
 
-POST http://localhost:9991/api/auth/temp
+POST http://localhost:9993/api/auth/temp
 Content-Type: application/x-www-form-urlencoded
 
 homepageId=dong&password=1234&name=donghun
